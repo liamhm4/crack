@@ -8,12 +8,18 @@ hashpass: hashpass.o md5.o
 # Add recipe to compile md5.o from md5.c below,
 # indented with a tab.
 md5.o: md5.c
-
+	clang -c md5.c
 
 # Add recipe to compile hashpass.o from hashpass.c below,
 # indented with a tab.
 hashpass.o: hashpass.c
+	clang -c hashpass.c -g -Wall
+	
+crack.o: crack.c
+	clang -c crack.c -g -Wall
 
+crack: crack.o md5.o
+	clang crack.o md5.o -o crack -l crypto
 
 hashes: hashpass
 	./hashpass rockyou100.txt hashes.txt
@@ -25,4 +31,5 @@ check: hashpass
 	valgrind ./hashpass rockyou100.txt hashes.txt
 
 clean:
-	rm -f *.o hashpass hashes.txt
+	rm -f *.o hashpass hashes.txt wordhashes.txt
+
